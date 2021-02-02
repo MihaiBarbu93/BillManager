@@ -1,4 +1,5 @@
 using BillManager.Data;
+using BillManager.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +27,7 @@ namespace BillManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IFacturiRepository, FacturiRepository>();
             services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(_config.GetConnectionString("BillManagerConnectionString")));
             services.AddControllersWithViews();
         }

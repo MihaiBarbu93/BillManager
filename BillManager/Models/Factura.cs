@@ -12,6 +12,7 @@ namespace BillManager.Models
         public Factura()
         {
             DetaliiFactura = new HashSet<DetaliiFactura>();
+            Produse = new List<Produse>();
         }
 
         public int IdFactura { get; set; }
@@ -21,5 +22,18 @@ namespace BillManager.Models
         public string NumeClient { get; set; }
 
         public virtual ICollection<DetaliiFactura> DetaliiFactura { get; set; }
+        [NotMapped]
+        public List<Produse> Produse { get; set; }
+
+       
+    }
+    [NotMapped]
+    public class Produse
+    {
+        public int IdDetaliiFactura { get; set; }
+        public string NumeProdus { get; set; }
+        public decimal Cantitate { get; set; }
+        public decimal PretUnitar { get; set; }
+        public decimal Valoare { get; set; }
     }
 }

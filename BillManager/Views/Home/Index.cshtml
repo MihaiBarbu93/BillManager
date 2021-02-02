@@ -1,8 +1,26 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<Factura>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">ID Locatie</th>
+            <th scope="col">Nr Factura</th>
+            <th scope="col">Data</th>
+            <th scope="col">Client</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var factura in Model)
+        {
+            <tr>
+                <th scope="row">@factura.IdFactura</th>
+                <td>@factura.IdLocatie</td>
+                <td>@factura.NumarFactura</td>
+                <td>@factura.DataFactura</td>
+                <td>@factura.NumeClient</td>
+            </tr>
+        }
+        </tbody>
+</table>
+
