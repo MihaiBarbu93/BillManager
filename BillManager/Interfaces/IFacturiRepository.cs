@@ -1,4 +1,4 @@
-﻿using BillManager.DTOs;
+﻿
 using BillManager.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,8 @@ namespace BillManager.Interfaces
     public interface IFacturiRepository
     {
         Task<List<Factura>> GetFacturiAsync();
+
+        void AdaugaFactura(Factura factura);
         
         Task<bool> SaveAllAsync();
     }

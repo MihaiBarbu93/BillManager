@@ -1,0 +1,195 @@
+﻿<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
+<form class="needs-validation" novalidate>
+    <div class="form-row">
+        <div class="col-md-3 mb-3">
+            <label for="Locatie">Locatie</label>
+            <input type="text" class="form-control" id="Locatie" name="Locatie" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="NumarFactura">Numar Factura</label>
+            <input type="text" class="form-control" id="NumarFactura" name="NumarFactura" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="DataFactura">Data</label>
+            <input type="text" class="form-control" id="DataFactura" name="DataFactura" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="NumeClient">Client</label>
+            <input type="text" class="form-control" id="NumeClient" name="NumeClient" required>
+            <div class="valid-feedback">
+                Looks good!
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <br />
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nume Produs</th>
+                    <th scope="col">Cantitate</th>
+                    <th scope="col">Pret Unitar</th>
+                    <th scope="col">Valoare</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td><input type="text" id="NumeProdus" /></td>
+                    <td><input type="number" id="Cantitate" /></td>
+                    <td><input type="number" id="PretUnitar" /></td>
+                    <td><input class="btn-secondary" type="button" id="add" value="add" /></td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="produse" class="tablecontainer">
+
+        </div>
+    </div>
+    <input class="btn-dark" id="submit" type="button" value="Save"/>
+</form>
+
+@section Scripts{
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+    <script>
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+        $(function () {
+            $('#DataFactura').datepicker({
+                dateFormat: 'mm-dd-yy'
+            });
+        });
+        $(document).ready(function () {
+            var produse = [];
+            $('#add').click(function () {
+                produse.push({
+                    NumeProdus: $('#NumeProdus').val().trim(),
+                    Cantitate: parseFloat($('#Cantitate').val().trim()),
+                    PretUnitar: parseFloat($('#PretUnitar').val().trim()),
+                    Valoare: parseFloat($('#Cantitate').val().trim()) * parseFloat($('#PretUnitar').val().trim())
+                });
+                GenerareTabelProduse();
+            });
+        
+            
+            $('#submit').click(function () {
+
+                var data = {
+                    IdLocatie: $('#Locatie').val().trim(),
+                    NumarFactura: $('#NumarFactura').val().trim(),
+                    DataFactura: $('#DataFactura').val().trim(),
+                    NumeClient: $('#NumeClient').val().trim(),
+                    Produse: produse
+                };
+                var dataToSend = JSON.stringify(data);
+                console.log(data);
+                console.log(JSON.stringify({ facturaDto: data }));
+
+                $.ajax({
+                    url: '/Bill/SalvareFactura',
+                    type: "POST",
+                    data: dataToSend,
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        if (response.success) {
+                            alert('Successfully done.');
+                            produse = [];
+                            $('#Locatie').val('');
+                            $('#NumarFactura').val('');
+                            $('#DataFactura').val('');
+                            $('#NumeClient').val('');
+                            $('#produse').empty();
+                        }
+                        else {
+                            alert('Failed');
+                        }
+                        $('#submit').val('Save');
+                    },
+                    error: function () {
+                        alert('Error. Please try again.');
+                        $('#submit').val('Save');
+                    }
+                });
+            });
+
+            function GenerareTabelProduse() {
+                if (produse.length > 0) {
+                    var $table = $('<table/>');
+                    $table.append('<thead><tr><th>Produs</th><th>Cantitate</th><th>Pret Unitar</th><th>Total</th><th></th></tr></thead>');
+                    var $tbody = $('<tbody/>');
+                    $.each(produse, function (i, val) {
+                        var $row = $('<tr/>');
+                        $row.append($('<td/>').html(val.NumeProdus));
+                        $row.append($('<td/>').html(val.Cantitate));
+                        $row.append($('<td/>').html(val.PretUnitar));
+                        $row.append($('<td/>').html(val.Valoare));
+                        var $remove = $('<a href="#">Remove</a>');
+                        $remove.click(function (e) {
+                            e.preventDefault();
+                            produse.splice(i, 1);
+                            GenerareTabelProduse();
+                        });
+                        $row.append($('<td/>').html($remove));
+                        $tbody.append($row);
+                    });
+                    $table.append($tbody);
+                    $('#produse').html($table);
+                }
+                else {
+                    $('#produse').html('');
+                }
+            };
+        });
+    </script>
+    <style>
+        .container td {
+            vertical-align: top;
+        }
+
+        .tablecontainer table {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 1px solid #BFAEAE;
+            border-right: 1px solid #BFAEAE;
+        }
+
+        .tablecontainer th {
+            border-bottom: 2px solid #BFAEAE !important;
+        }
+
+        .tablecontainer th, .tablecontainer td {
+            text-align: left;
+            border-left: 1px solid #BFAEAE;
+            padding: 5px;
+            border-bottom: 1px solid #BFAEAE;
+        }
+
+        .ui-widget {
+            font-size: 12px !important;
+        }
+    </style>
+}

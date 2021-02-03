@@ -1,4 +1,4 @@
-﻿using BillManager.DTOs;
+﻿
 using BillManager.Interfaces;
 using BillManager.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +17,12 @@ namespace BillManager.Data
             _context = context;
 
         }
+
+        public void AdaugaFactura(Factura factura)
+        {
+            _context.Facturi.Add(factura);
+        }
+
         public async Task<List<Factura>> GetFacturiAsync()
         {
             return await _context.Facturi

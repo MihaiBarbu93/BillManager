@@ -21,7 +21,7 @@ namespace BillManager.Models
         public DateTime DataFactura { get; set; }
         public string NumeClient { get; set; }
 
-        public virtual ICollection<DetaliiFactura> DetaliiFactura { get; set; }
+        public ICollection<DetaliiFactura> DetaliiFactura { get; set; }
         [NotMapped]
         public List<Produse> Produse { get; set; }
 
