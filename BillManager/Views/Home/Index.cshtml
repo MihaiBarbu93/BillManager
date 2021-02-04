@@ -23,6 +23,15 @@
                 <td>@factura.NumarFactura</td>
                 <td>@factura.DataFactura</td>
                 <td>@factura.NumeClient</td>
+                <td>
+                    <a asp-controller="Bill"
+                       asp-action="EditFactura"
+                       asp-route-id="@factura.IdFactura"
+                       type="button" class="btn btn-primary">
+                        Edit
+                    </a>
+                </td>
+
             </tr>
         }
         </tbody>

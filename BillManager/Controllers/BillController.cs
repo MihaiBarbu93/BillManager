@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 
 namespace BillManager.Controllers
 {
@@ -24,7 +25,15 @@ namespace BillManager.Controllers
         }
         public ActionResult Index()
         {
-            return View();
+            Factura factura = new Factura() { IdFactura = 0 };
+            return View(factura);
+        }
+        [HttpGet]
+        public async Task<IActionResult> EditFactura(int id)
+        {
+            Factura factura = await _facturiRepository.GetFacturaAsync(id);
+            return View("Index", factura);
+         
         }
 
         // POST: BillController/Create
@@ -58,6 +67,54 @@ namespace BillManager.Controllers
                         });
                     }
                     _facturiRepository.AdaugaFactura(fc);
+                    await _facturiRepository.SaveAllAsync();
+                    status = true;
+
+                }
+                else
+                {
+                    status = false;
+                }
+
+                return Json(new { success = status });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ModificareFactura()
+        {
+            using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+            {
+                bool status = false;
+
+                if (ModelState.IsValid)
+                {
+                    var content = reader.ReadToEndAsync().Result;
+                    Factura facturaModificata = JsonConvert.DeserializeObject<Factura>(content);
+                    Factura facturaOriginala = await _facturiRepository.GetFacturaRawAsync(facturaModificata.IdFactura);
+
+
+                    facturaOriginala.IdLocatie = facturaModificata.IdLocatie;
+                    facturaOriginala.NumarFactura = facturaModificata.NumarFactura;
+                    facturaOriginala.DataFactura = facturaModificata.DataFactura;
+                    facturaOriginala.NumeClient = facturaModificata.NumeClient;
+                    facturaOriginala.DetaliiFactura = new List<DetaliiFactura>();
+            
+                    foreach (var produs in facturaModificata.Produse)
+                    {
+                        facturaOriginala.DetaliiFactura.Add(new DetaliiFactura
+                        {
+                            IdDetaliiFactura= produs.IdDetaliiFactura,
+                            IdLocatie = facturaModificata.IdLocatie,
+                            NumeProdus = produs.NumeProdus,
+                            Cantitate = produs.Cantitate,
+                            PretUnitar = produs.PretUnitar,
+                            Valoare = produs.Valoare,
+                            IdFactura = facturaModificata.IdFactura
+                        });
+                        
+        
+                    }
                     await _facturiRepository.SaveAllAsync();
                     status = true;
 

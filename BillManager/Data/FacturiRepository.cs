@@ -23,9 +23,9 @@ namespace BillManager.Data
             _context.Facturi.Add(factura);
         }
 
-        public async Task<List<Factura>> GetFacturiAsync()
+            public async Task<Factura> GetFacturaAsync(int idFactura)
         {
-            return await _context.Facturi
+            var facturi = await _context.Facturi
                 .Select(factura => new Factura
                 {
                     DataFactura = factura.DataFactura,
@@ -45,7 +45,40 @@ namespace BillManager.Data
                     .ToList()
                 })
                 .ToListAsync();
+            var factura = facturi.FirstOrDefault(fc => fc.IdFactura == idFactura);
+            return factura;
         }
+
+        public async Task<Factura> GetFacturaRawAsync(int idFactura)
+        {
+            return await _context.Facturi.FirstOrDefaultAsync(fc => fc.IdFactura == idFactura);
+        }
+
+        public async Task<List<Factura>> GetFacturiAsync()
+        {
+            return await _context.Facturi
+                .Select(factura => new Factura
+                {
+                    DataFactura = factura.DataFactura,
+                    NumeClient = factura.NumeClient,
+                    NumarFactura = factura.NumarFactura,
+                    IdLocatie = factura.IdLocatie,
+                    IdFactura = factura.IdFactura,
+                    Produse = factura.DetaliiFactura
+                    .Select(detalii => new Produse
+                    {
+                        Cantitate = detalii.Cantitate,
+                        NumeProdus = detalii.NumeProdus,
+                        PretUnitar = detalii.PretUnitar,
+                        Valoare = detalii.Valoare,
+                        IdDetaliiFactura = detalii.IdDetaliiFactura
+                    })
+                    .ToList()
+                })
+                .ToListAsync();
+        }
+
+
 
         public async Task<bool> SaveAllAsync()
         {
