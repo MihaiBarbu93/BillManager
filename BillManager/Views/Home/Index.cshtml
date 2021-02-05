@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Factura>
     <a asp-controller="Bill"
             asp-action="Index"
-            type="button" class="btn btn-primary">
+            type="button" class="btn btn-primary mb-3">
     Add new invoice
     </a>
 <table class="table">
@@ -12,6 +12,7 @@
             <th scope="col">Nr Factura</th>
             <th scope="col">Data</th>
             <th scope="col">Client</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -21,7 +22,7 @@
                 <th scope="row">@factura.IdFactura</th>
                 <td>@factura.IdLocatie</td>
                 <td>@factura.NumarFactura</td>
-                <td>@factura.DataFactura</td>
+                <td>@factura.DataFactura.ToString("MM/dd/yyyy")</td>
                 <td>@factura.NumeClient</td>
                 <td>
                     <a asp-controller="Bill"

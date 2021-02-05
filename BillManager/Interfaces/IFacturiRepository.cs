@@ -14,6 +14,8 @@ namespace BillManager.Interfaces
         Task<Factura> GetFacturaRawAsync(int idFactura);
         Task<Factura> GetFacturaAsync(int idFactura);
         void AdaugaFactura(Factura factura);
+
+        void StergereProdus(List<int> idProduse);
         
         Task<bool> SaveAllAsync();
     }

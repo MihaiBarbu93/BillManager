@@ -44,7 +44,7 @@ namespace BillManager.Data.Migrations
                         columns: x => new { x.IdFactura, x.IdLocatie },
                         principalTable: "Facturi",
                         principalColumns: new[] { "IdFactura", "IdLocatie" },
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

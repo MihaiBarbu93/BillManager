@@ -18,6 +18,24 @@ namespace BillManager.Data
 
         }
 
+        public void StergereProdus(List<int> idProduse)
+        {
+            var produse = _context.DetaliiFacturi.Where(pr => idProduse.Contains(pr.IdDetaliiFactura));
+            foreach (var prod in produse)
+            {
+                try
+                {
+                    _context.DetaliiFacturi.Remove(prod);
+                }
+                catch (Exception e) {
+                    throw new Exception($"{e.Message}");
+                }
+                var x = _context.DetaliiFacturi;
+
+            }
+
+        }
+
         public void AdaugaFactura(Factura factura)
         {
             _context.Facturi.Add(factura);
@@ -51,7 +69,7 @@ namespace BillManager.Data
 
         public async Task<Factura> GetFacturaRawAsync(int idFactura)
         {
-            return await _context.Facturi.FirstOrDefaultAsync(fc => fc.IdFactura == idFactura);
+            return await _context.Facturi.Include(p=>p.DetaliiFactura).FirstOrDefaultAsync(fc => fc.IdFactura == idFactura);
         }
 
         public async Task<List<Factura>> GetFacturiAsync()

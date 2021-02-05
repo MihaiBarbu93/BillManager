@@ -98,6 +98,13 @@ namespace BillManager.Controllers
                     facturaOriginala.NumarFactura = facturaModificata.NumarFactura;
                     facturaOriginala.DataFactura = facturaModificata.DataFactura;
                     facturaOriginala.NumeClient = facturaModificata.NumeClient;
+                    var iduriDB = facturaOriginala.DetaliiFactura.Select(id => id.IdDetaliiFactura);
+                    var iduriFE = facturaModificata.Produse.Select(id => id.IdDetaliiFactura);
+                    if (iduriDB.Count() > iduriFE.Count())
+                    {
+                        var productsToDelete = iduriDB.Except(iduriFE).ToList();
+                        _facturiRepository.StergereProdus(productsToDelete);
+                    }
                     facturaOriginala.DetaliiFactura = new List<DetaliiFactura>();
             
                     foreach (var produs in facturaModificata.Produse)
