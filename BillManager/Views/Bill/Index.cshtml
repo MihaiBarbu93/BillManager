@@ -1,70 +1,85 @@
 ﻿@model Factura
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
-<form class="needs-validation" novalidate>
-    <div class="form-row">
-        <div class="col-md-3 mb-3">
-            <label for="Locatie">Locatie</label>
-            <input type="text" class="form-control" id="Locatie" name="Locatie" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <label for="NumarFactura">Numar Factura</label>
-            <input type="text" class="form-control" id="NumarFactura" name="NumarFactura" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <label for="DataFactura">Data</label>
-            <input type="text" class="form-control" id="DataFactura" name="DataFactura" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <label for="NumeClient">Client</label>
-            <input type="text" class="form-control" id="NumeClient" name="NumeClient" required>
-            <div class="valid-feedback">
-                Looks good!
-            </div>
-        </div>
-    </div>
-    <div class="form-row">
-        <br />
-        <table class="table table-dark">
-            <thead>
-                <tr> 
-                    <th scope="col">Nume Produs</th>
-                    <th scope="col">Cantitate</th>
-                    <th scope="col">Pret Unitar</th>
-                    <th scope="col">Valoare</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    
-                    <td><input type="text" id="NumeProdus" /></td>
-                    <td><input type="number" id="Cantitate" /></td>
-                    <td><input type="number" id="PretUnitar" /></td>
-                    <td><input class="btn-secondary" type="button" id="add" value="add" /></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div id="produse">
-    </div>
-    @if (Model.IdFactura == 0)
-    {
-        <input style="float : right" class="btn-dark" id="submit" type="button" value="Save" />
-    }
-    else
-    { 
-        <input style="float : right" class="btn-dark" id="modify" type="button" value="Save" />
-    }
+@if (Model.IdFactura == 0)
+{
+    <h3>Create New Invoice</h3>
+}
+else
+{
+    <h3>Edit Invoice</h3>
+}
+<div class="card">
+    <div class="card-body">
 
-</form>
+
+        <form class="needs-validation" novalidate>
+            <div class="form-row">
+                <div class="col-md-3 mb-3">
+                    <label for="Locatie">Locatie</label>
+                    <input type="text" class="form-control" id="Locatie" name="Locatie" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="NumarFactura">Numar Factura</label>
+                    <input type="text" class="form-control" id="NumarFactura" name="NumarFactura" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="DataFactura">Data</label>
+                    <input type="text" class="form-control" id="DataFactura" name="DataFactura" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="NumeClient">Client</label>
+                    <input type="text" class="form-control" id="NumeClient" name="NumeClient" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <br />
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nume Produs</th>
+                            <th scope="col">Cantitate</th>
+                            <th scope="col">Pret Unitar</th>
+                            <th scope="col">Valoare</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+
+                            <td><input type="text" id="NumeProdus" /></td>
+                            <td><input type="number" id="Cantitate" /></td>
+                            <td><input type="number" id="PretUnitar" /></td>
+                            <td><input class="btn btn-secondary" type="button" id="add" value="Add" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="produse">
+            </div>
+            @if (Model.IdFactura == 0)
+            {
+                <input style="float : right; width: 8em" class="btn btn-primary" id="submit" type="button" value="Save" />
+            }
+            else
+            {
+                <input style="float : right ; width: 8em" class="btn btn-primary" id="modify" type="button" value="Save" />
+            }
+
+        </form>
+    </div>
+</div>
 
 @section Scripts{
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
@@ -215,7 +230,7 @@
 
             function GenerareTabelProduse() {
                 if (produse.length > 0) {
-                    var $table = $('<table class="table table-dark"/>');
+                    var $table = $('<table class="table table-bordered"/>');
                     $table.append('<thead><tr><th scope="col">#</th><th>Produs</th><th>Cantitate</th><th>Pret Unitar</th><th>Total</th><th></th></tr></thead>');
                     var $tbody = $('<tbody/>');
                     $.each(produse, function (i, val) {
@@ -243,10 +258,5 @@
             };
         });
     </script>
-    <style>
 
-        .ui-widget {
-            font-size: 12px !important;
-        }
-    </style>
 }
